@@ -1,0 +1,5 @@
+C:\ClaudeCode Projects\Marker_Spaces\MarkerSpacesPlugin\bin\Release\MarkerSpacesPlugin.dll
+C:\ClaudeCode Projects\Marker_Spaces\MarkerSpacesPlugin\bin\Release\MarkerSpacesPlugin.pdb
+C:\ClaudeCode Projects\Marker_Spaces\MarkerSpacesPlugin\obj\Release\MarkerSpacesPlugin.csprojResolveAssemblyReference.cache
+C:\ClaudeCode Projects\Marker_Spaces\MarkerSpacesPlugin\obj\Release\MarkerSpacesPlugin.dll
+C:\ClaudeCode Projects\Marker_Spaces\MarkerSpacesPlugin\obj\Release\MarkerSpacesPlugin.pdb

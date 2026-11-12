@@ -1,0 +1,933 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <style>
+      :root {
+        --ms-bg: #ffffff;
+        --ms-fg: #1f2328;
+        --ms-muted: #59636e;
+        --ms-line: #d0d7de;
+        --ms-head: #f3f5f7;
+        --ms-sel: #dbeafe;
+        --ms-accent: #0b6bcb;
+        --ms-warn: #9a3412;
+        --ms-ok: #166534;
+        --ms-mono: Consolas, 'Cascadia Mono', monospace;
+      }
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --ms-bg: #1e1f22;
+          --ms-fg: #e6e6e6;
+          --ms-muted: #a0a6ad;
+          --ms-line: #3a3d42;
+          --ms-head: #2a2c30;
+          --ms-sel: #1e3a5f;
+          --ms-accent: #6cb6ff;
+          --ms-warn: #fdba74;
+          --ms-ok: #86efac;
+        }
+      }
+      html,
+      body {
+        margin: 0;
+        height: 100%;
+        background: var(--ms-bg);
+        color: var(--ms-fg);
+        font: 13px/1.4 'Segoe UI', system-ui, sans-serif;
+      }
+      body {
+        display: flex;
+        flex-direction: column;
+        padding: 8px 12px;
+        box-sizing: border-box;
+        gap: 6px;
+      }
+      .row {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 8px;
+      }
+      .grow {
+        flex: 1;
+      }
+      button {
+        font: inherit;
+        padding: 3px 10px;
+        border: 1px solid var(--ms-line);
+        background: var(--ms-head);
+        color: var(--ms-fg);
+        border-radius: 4px;
+        cursor: pointer;
+      }
+      button.primary {
+        background: var(--ms-accent);
+        border-color: var(--ms-accent);
+        color: #fff;
+        font-weight: 600;
+      }
+      button:disabled {
+        opacity: 0.5;
+        cursor: default;
+      }
+      select,
+      input[type='text'] {
+        font: inherit;
+        background: var(--ms-bg);
+        color: var(--ms-fg);
+        border: 1px solid var(--ms-line);
+        border-radius: 3px;
+        padding: 2px 4px;
+      }
+      #intro,
+      #status,
+      .hint {
+        color: var(--ms-muted);
+      }
+      #status.busy {
+        color: var(--ms-warn);
+        font-weight: 600;
+      }
+      #tableWrap {
+        flex: 1;
+        overflow: auto;
+        border: 1px solid var(--ms-line);
+        min-height: 120px;
+      }
+      table {
+        border-collapse: collapse;
+        width: 100%;
+      }
+      th,
+      td {
+        border-bottom: 1px solid var(--ms-line);
+        padding: 3px 6px;
+        text-align: left;
+        vertical-align: top;
+      }
+      th {
+        position: sticky;
+        top: 0;
+        background: var(--ms-head);
+        font-weight: 600;
+        z-index: 1;
+      }
+      td.text {
+        font-family: var(--ms-mono);
+        white-space: pre-wrap;
+        word-break: break-word;
+      }
+      td.ref {
+        white-space: nowrap;
+      }
+      tr:hover td {
+        background: var(--ms-sel);
+      }
+      .byhand {
+        color: var(--ms-muted);
+        font-style: italic;
+      }
+      #results {
+        max-height: 110px;
+        overflow: auto;
+        white-space: pre-wrap;
+        border: 1px solid var(--ms-line);
+        padding: 4px 6px;
+        font-size: 12px;
+      }
+      #results.ok {
+        color: var(--ms-ok);
+      }
+      .panel {
+        border: 1px solid var(--ms-line);
+        background: var(--ms-head);
+        padding: 8px;
+        border-radius: 4px;
+      }
+      .panel label.field {
+        display: grid;
+        grid-template-columns: minmax(200px, 45%) 1fr;
+        gap: 8px;
+        align-items: center;
+        margin: 3px 0;
+      }
+      .overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.35);
+        display: none;
+        align-items: center;
+        justify-content: center;
+        z-index: 10;
+      }
+      .overlay.show {
+        display: flex;
+      }
+      .dialog {
+        background: var(--ms-bg);
+        border: 1px solid var(--ms-line);
+        border-radius: 6px;
+        padding: 14px;
+        max-width: 640px;
+        width: calc(100% - 40px);
+        max-height: calc(100% - 40px);
+        overflow: auto;
+        box-shadow: 0 6px 24px rgba(0, 0, 0, 0.3);
+      }
+      .dialog h3 {
+        margin: 0 0 8px;
+      }
+      #bookGrid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
+        gap: 2px 8px;
+        margin: 8px 0;
+        font-family: var(--ms-mono);
+      }
+      .hidden {
+        display: none !important;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="row">
+      <strong id="project"></strong>
+      <span class="grow"></span>
+      <button id="booksBtn" type="button"></button>
+      <button id="optionsBtn" type="button"></button>
+      <button id="rescanBtn" type="button"></button>
+    </div>
+    <div id="intro"></div>
+
+    <div id="optionsPanel" class="panel hidden">
+      <label class="field"><span id="lExclude"></span><input type="text" id="oExclude" /></label>
+      <label class="field"><span id="lNoClose"></span><input type="text" id="oNoClose" /></label>
+      <label class="field"><span id="lNoCloseInNote"></span><input type="text" id="oNoCloseInNote" /></label>
+      <label class="field"><span id="lExtra"></span><input type="text" id="oExtra" /></label>
+      <label class="field"><span id="lNoSpaceBefore"></span><input type="text" id="oNoSpaceBefore" /></label>
+      <div class="row">
+        <label><input type="checkbox" id="oFootnote" /> <span id="lFootnote"></span></label>
+        <label><input type="checkbox" id="oXref" /> <span id="lXref"></span></label>
+      </div>
+      <div class="hint" id="optionsHint"></div>
+      <div class="row" style="margin-top: 6px">
+        <button id="saveOptionsBtn" type="button" class="primary"></button>
+        <button id="defaultsBtn" type="button"></button>
+      </div>
+    </div>
+
+    <div class="row">
+      <label><span id="lKind"></span> <select id="kindFilter"></select></label>
+      <label><span id="lMarker"></span> <select id="markerFilter"></select></label>
+      <label><input type="checkbox" id="showByHand" /> <span id="lShowByHand"></span></label>
+    </div>
+    <div id="status"></div>
+    <div id="tableWrap">
+      <table>
+        <thead>
+          <tr>
+            <th style="width: 3em" id="hFix"></th>
+            <th id="hRef"></th>
+            <th id="hProblem"></th>
+            <th id="hNow"></th>
+            <th id="hAfter"></th>
+          </tr>
+        </thead>
+        <tbody id="rows"></tbody>
+      </table>
+    </div>
+    <div class="row">
+      <button id="tickBtn" type="button"></button>
+      <button id="untickBtn" type="button"></button>
+      <span class="grow hint" id="goToHint"></span>
+      <button id="fixBtn" type="button" class="primary"></button>
+    </div>
+    <div id="results"></div>
+
+    <div class="overlay" id="confirmOverlay">
+      <div class="dialog">
+        <h3 id="confirmTitle"></h3>
+        <div id="confirmText" style="white-space: pre-wrap"></div>
+        <div class="row" style="margin-top: 12px; justify-content: flex-end">
+          <button id="confirmYes" type="button" class="primary"></button>
+          <button id="confirmNo" type="button"></button>
+        </div>
+      </div>
+    </div>
+
+    <div class="overlay" id="booksOverlay">
+      <div class="dialog">
+        <h3 id="booksTitle"></h3>
+        <div class="hint" id="booksIntro"></div>
+        <div class="row" style="margin-top: 6px" id="bookQuick"></div>
+        <div id="bookGrid"></div>
+        <div class="hint" id="booksError"></div>
+        <div class="row" style="justify-content: flex-end">
+          <button id="booksOk" type="button" class="primary"></button>
+          <button id="booksCancel" type="button"></button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const BOOT = __MS_BOOT__;
+      const papi = require('@papi/frontend');
+      const { logger } = require('@papi/frontend');
+
+      const DOT = '·';
+      const MAX_ROWS = 3000;
+
+      const T = {
+        en: {
+          intro:
+            'These are the spacing problems found around markers. Tick the ones to fix, then click Fix. The "After fix" column shows the change; a dot (' +
+            DOT +
+            ') marks a space that is removed or added. Double-click a row to go to the verse.',
+          project: 'Project: {0}',
+          scanning: 'Scanning...',
+          fixing: 'Fixing...',
+          optionsShow: 'Options...',
+          optionsHide: 'Hide options',
+          optExclude: 'Marker codes to exclude',
+          optNoClose: 'Markers that do not require a closing marker',
+          optNoCloseInNote: 'Markers that do not require a closing marker only inside a footnote/cross-reference',
+          optExtra: 'Extra markers to check for spacing',
+          optNoSpaceBefore: 'Markers that should have NO space before them',
+          optFootnote: 'Footnote precedes text',
+          optXref: 'Cross-references occur before word',
+          optionsHint:
+            'Marker codes are separated by spaces, without backslashes (for example: w rq). The options are saved for this project.',
+          saveRescan: 'Save options and scan again',
+          defaults: 'Restore defaults',
+          kind: 'Problem:',
+          marker: 'Marker:',
+          all: '(all)',
+          showByHand: 'Also show problems that must be fixed by hand (unclosed or unexpected closing markers)',
+          counts: '{0} problem(s) shown, {1} can be fixed, {2} ticked in all.',
+          tooMany: 'Only the first {0} are listed; use the filters to see the others.',
+          noProblems: 'No marker spacing problems were found.',
+          colFix: 'Fix',
+          colRef: 'Reference',
+          colProblem: 'Problem',
+          colNow: 'Now',
+          colAfter: 'After fix',
+          byHand: '(fix by hand)',
+          goToHint: 'Double-click a row to go to the verse.',
+          tickShown: 'Tick all shown',
+          untickShown: 'Untick all shown',
+          fix: 'Fix ticked problems ({0})',
+          rescan: 'Scan again',
+          nothingTicked: 'Tick at least one problem to fix.',
+          confirmTitle: 'Fix marker spaces',
+          confirm:
+            'Fix {0} problem(s) in {1} book(s)?\n\nA copy of each book is kept before it is changed (in the extension\'s own storage).',
+          yes: 'Fix',
+          cancel: 'Cancel',
+          ok: 'OK',
+          resFixed: '{0}: {1} problem(s) fixed',
+          resTotal: 'Fixed: {0} problem(s) in {1} book(s).',
+          resNothing: 'Nothing was changed.',
+          resNoPermission: 'Not changed, because you do not have permission to edit this project.',
+          resChanged: 'Not changed, because the text changed after the scan (scan again, then try again): {0}',
+          resFailed: 'Could not change: {0}',
+          resBackups: '{0} backup(s) kept.',
+          noPermissionProject: 'You do not have permission to edit this project, so these problems cannot be fixed here.',
+          readFailed: 'Could not read: {0}',
+          error: 'Marker Spaces could not finish: {0}',
+          booksButton: 'Books: {0} of {1}...',
+          booksTitle: 'Books to examine',
+          booksIntro: 'Tick the books to examine. Unticked books are not read at all. The choice is saved for this project.',
+          booksAll: 'All',
+          booksNone: 'None',
+          booksBible: 'Bible books',
+          booksOT: 'Old Testament',
+          booksNT: 'New Testament',
+          booksDC: 'Deuterocanon',
+          booksOther: 'Other books',
+          booksNoneChosen: 'Tick at least one book.',
+          kinds: [
+            'Missing space before an opening marker',
+            'Space before \\f or \\x',
+            'Space before a closing marker',
+            'Missing space after a closing marker',
+            'Space before punctuation after a closing marker',
+            'Space after a closing marker (note precedes text)',
+            'Missing space before \\v, \\ft, \\fr, ...',
+            'Space before | in \\w',
+            'Unclosed marker',
+            'Unexpected closing marker',
+          ],
+          messages: [
+            'Missing space before \\{0}',
+            'Unwanted space before \\{0}',
+            'Unwanted space before \\{0}',
+            'Missing space after \\{0}',
+            'Unwanted space before punctuation after \\{0}',
+            'Unwanted space after \\{0} (precedes text)',
+            'Missing space before \\{0}',
+            'Unwanted space before | in \\w...\\w* (produces a double space)',
+            'Unclosed \\{0} (no matching \\{0}* found)',
+            'Unexpected \\{0} (\\{1} is not normally closed)',
+          ],
+        },
+        es: {
+          intro:
+            'Estos son los problemas de espaciado encontrados alrededor de los marcadores. Marque los que desea corregir y haga clic en Corregir. La columna "Después" muestra el cambio; un punto (' +
+            DOT +
+            ') indica un espacio que se quita o se agrega. Haga doble clic en una fila para ir al versículo.',
+          project: 'Proyecto: {0}',
+          scanning: 'Revisando...',
+          fixing: 'Corrigiendo...',
+          optionsShow: 'Opciones...',
+          optionsHide: 'Ocultar opciones',
+          optExclude: 'Códigos de marcador a excluir',
+          optNoClose: 'Marcadores que no requieren un marcador de cierre',
+          optNoCloseInNote:
+            'Marcadores que no requieren un marcador de cierre solo dentro de una nota al pie/referencia cruzada',
+          optExtra: 'Marcadores adicionales para verificar el espaciado',
+          optNoSpaceBefore: 'Marcadores que NO deben tener espacio antes',
+          optFootnote: 'La nota precede al texto',
+          optXref: 'Las referencias cruzadas ocurren antes de la palabra',
+          optionsHint:
+            'Los códigos de marcador se separan con espacios, sin barra invertida (por ejemplo: w rq). Las opciones se guardan para este proyecto.',
+          saveRescan: 'Guardar opciones y revisar de nuevo',
+          defaults: 'Restaurar valores predeterminados',
+          kind: 'Problema:',
+          marker: 'Marcador:',
+          all: '(todos)',
+          showByHand:
+            'Mostrar también los problemas que hay que corregir a mano (marcadores sin cerrar o cierres inesperados)',
+          counts: '{0} problema(s) mostrado(s), {1} se pueden corregir, {2} marcado(s) en total.',
+          tooMany: 'Solo se muestran los primeros {0}; use los filtros para ver los demás.',
+          noProblems: 'No se encontraron problemas de espaciado en los marcadores.',
+          colFix: 'Corregir',
+          colRef: 'Referencia',
+          colProblem: 'Problema',
+          colNow: 'Ahora',
+          colAfter: 'Después',
+          byHand: '(corregir a mano)',
+          goToHint: 'Haga doble clic en una fila para ir al versículo.',
+          tickShown: 'Marcar todos los mostrados',
+          untickShown: 'Desmarcar todos los mostrados',
+          fix: 'Corregir los problemas marcados ({0})',
+          rescan: 'Revisar de nuevo',
+          nothingTicked: 'Marque al menos un problema para corregir.',
+          confirmTitle: 'Corregir espacios de marcadores',
+          confirm:
+            '¿Corregir {0} problema(s) en {1} libro(s)?\n\nAntes de cambiar cada libro se guarda una copia (en el almacenamiento propio de la extensión).',
+          yes: 'Corregir',
+          cancel: 'Cancelar',
+          ok: 'Aceptar',
+          resFixed: '{0}: {1} problema(s) corregido(s)',
+          resTotal: 'Corregido: {0} problema(s) en {1} libro(s).',
+          resNothing: 'No se cambió nada.',
+          resNoPermission: 'No se cambiaron, porque usted no tiene permiso para editar este proyecto.',
+          resChanged:
+            'No se cambiaron, porque el texto cambió después de la revisión (revise de nuevo y vuelva a intentarlo): {0}',
+          resFailed: 'No se pudo cambiar: {0}',
+          resBackups: 'Se guardaron {0} copia(s) de seguridad.',
+          noPermissionProject:
+            'Usted no tiene permiso para editar este proyecto, así que estos problemas no se pueden corregir aquí.',
+          readFailed: 'No se pudo leer: {0}',
+          error: 'Espacios de marcadores no pudo terminar: {0}',
+          booksButton: 'Libros: {0} de {1}...',
+          booksTitle: 'Libros a revisar',
+          booksIntro:
+            'Marque los libros que desea revisar. Los libros sin marcar no se leen. La selección se guarda para este proyecto.',
+          booksAll: 'Todos',
+          booksNone: 'Ninguno',
+          booksBible: 'Libros de la Biblia',
+          booksOT: 'Antiguo Testamento',
+          booksNT: 'Nuevo Testamento',
+          booksDC: 'Deuterocanónicos',
+          booksOther: 'Otros libros',
+          booksNoneChosen: 'Marque al menos un libro.',
+          kinds: [
+            'Falta espacio antes de un marcador de apertura',
+            'Espacio antes de \\f o \\x',
+            'Espacio antes de un marcador de cierre',
+            'Falta espacio después de un marcador de cierre',
+            'Espacio antes de puntuación después de un marcador de cierre',
+            'Espacio después de un marcador de cierre (la nota precede al texto)',
+            'Falta espacio antes de \\v, \\ft, \\fr, ...',
+            'Espacio antes de | en \\w',
+            'Marcador sin cerrar',
+            'Marcador de cierre inesperado',
+          ],
+          messages: [
+            'Falta espacio antes de \\{0}',
+            'Espacio no deseado antes de \\{0}',
+            'Espacio no deseado antes de \\{0}',
+            'Falta espacio después de \\{0}',
+            'Espacio no deseado antes de la puntuación después de \\{0}',
+            'Espacio no deseado después de \\{0} (precede al texto)',
+            'Falta espacio antes de \\{0}',
+            'Espacio no deseado antes de | en \\w...\\w* (produce un espacio doble)',
+            '\\{0} sin cerrar (no se encontró \\{0}*)',
+            '\\{0} inesperado (\\{1} normalmente no se cierra)',
+          ],
+        },
+        fr: {
+          intro:
+            'Voici les problèmes d’espacement trouvés autour des marqueurs. Cochez ceux à corriger, puis cliquez sur Corriger. La colonne « Après correction » montre le changement ; un point (' +
+            DOT +
+            ') indique une espace supprimée ou ajoutée. Double-cliquez sur une ligne pour aller au verset.',
+          project: 'Projet : {0}',
+          scanning: 'Analyse...',
+          fixing: 'Correction...',
+          optionsShow: 'Options...',
+          optionsHide: 'Masquer les options',
+          optExclude: 'Codes de marqueurs à exclure',
+          optNoClose: 'Marqueurs qui n’exigent pas de marqueur de fermeture',
+          optNoCloseInNote:
+            'Marqueurs qui n’exigent pas de marqueur de fermeture seulement dans une note de bas de page/référence croisée',
+          optExtra: 'Autres marqueurs dont l’espacement est à vérifier',
+          optNoSpaceBefore: 'Marqueurs qui ne doivent PAS être précédés d’une espace',
+          optFootnote: 'La note précède le texte',
+          optXref: 'Les références croisées se trouvent avant le mot',
+          optionsHint:
+            'Les codes de marqueurs sont séparés par des espaces, sans barre oblique inverse (par exemple : w rq). Les options sont enregistrées pour ce projet.',
+          saveRescan: 'Enregistrer les options et analyser de nouveau',
+          defaults: 'Rétablir les valeurs par défaut',
+          kind: 'Problème :',
+          marker: 'Marqueur :',
+          all: '(tous)',
+          showByHand:
+            'Afficher aussi les problèmes à corriger à la main (marqueurs non fermés ou fermetures inattendues)',
+          counts: '{0} problème(s) affiché(s), {1} corrigeable(s), {2} coché(s) au total.',
+          tooMany: 'Seuls les {0} premiers sont listés ; utilisez les filtres pour voir les autres.',
+          noProblems: 'Aucun problème d’espacement autour des marqueurs n’a été trouvé.',
+          colFix: 'Corriger',
+          colRef: 'Référence',
+          colProblem: 'Problème',
+          colNow: 'Actuel',
+          colAfter: 'Après correction',
+          byHand: '(à corriger à la main)',
+          goToHint: 'Double-cliquez sur une ligne pour aller au verset.',
+          tickShown: 'Cocher toutes les lignes affichées',
+          untickShown: 'Décocher toutes les lignes affichées',
+          fix: 'Corriger les problèmes cochés ({0})',
+          rescan: 'Analyser de nouveau',
+          nothingTicked: 'Cochez au moins un problème à corriger.',
+          confirmTitle: 'Corriger les espaces autour des marqueurs',
+          confirm:
+            'Corriger {0} problème(s) dans {1} livre(s) ?\n\nUne copie de chaque livre est conservée avant sa modification (dans le stockage propre de l’extension).',
+          yes: 'Corriger',
+          cancel: 'Annuler',
+          ok: 'OK',
+          resFixed: '{0} : {1} problème(s) corrigé(s)',
+          resTotal: 'Corrigé : {0} problème(s) dans {1} livre(s).',
+          resNothing: 'Rien n’a été changé.',
+          resNoPermission: 'Non changé, car vous n’avez pas l’autorisation de modifier ce projet.',
+          resChanged:
+            'Non changé, car le texte a changé après l’analyse (analysez de nouveau, puis réessayez) : {0}',
+          resFailed: 'Impossible de changer : {0}',
+          resBackups: '{0} copie(s) de sauvegarde conservée(s).',
+          noPermissionProject:
+            'Vous n’avez pas l’autorisation de modifier ce projet, donc ces problèmes ne peuvent pas être corrigés ici.',
+          readFailed: 'Impossible de lire : {0}',
+          error: 'Espaces autour des marqueurs n’a pas pu terminer : {0}',
+          booksButton: 'Livres : {0} sur {1}...',
+          booksTitle: 'Livres à analyser',
+          booksIntro:
+            'Cochez les livres à analyser. Les livres non cochés ne sont pas lus du tout. Le choix est enregistré pour ce projet.',
+          booksAll: 'Tous',
+          booksNone: 'Aucun',
+          booksBible: 'Livres de la Bible',
+          booksOT: 'Ancien Testament',
+          booksNT: 'Nouveau Testament',
+          booksDC: 'Deutérocanoniques',
+          booksOther: 'Autres livres',
+          booksNoneChosen: 'Cochez au moins un livre.',
+          kinds: [
+            'Espace manquante avant un marqueur d’ouverture',
+            'Espace avant \\f ou \\x',
+            'Espace avant un marqueur de fermeture',
+            'Espace manquante après un marqueur de fermeture',
+            'Espace avant la ponctuation après un marqueur de fermeture',
+            'Espace après un marqueur de fermeture (la note précède le texte)',
+            'Espace manquante avant \\v, \\ft, \\fr, ...',
+            'Espace avant | dans \\w',
+            'Marqueur non fermé',
+            'Marqueur de fermeture inattendu',
+          ],
+          messages: [
+            'Espace manquante avant \\{0}',
+            'Espace superflue avant \\{0}',
+            'Espace superflue avant \\{0}',
+            'Espace manquante après \\{0}',
+            'Espace superflue avant la ponctuation après \\{0}',
+            'Espace superflue après \\{0} (précède le texte)',
+            'Espace manquante avant \\{0}',
+            'Espace superflue avant | dans \\w...\\w* (produit une double espace)',
+            '\\{0} non fermé (aucun \\{0}* correspondant)',
+            '\\{0} inattendu (\\{1} n’est normalement pas fermé)',
+          ],
+        },
+      };
+      const S = T[BOOT.lang] || T.en;
+      const REPORT_ONLY = [8, 9];
+      const OT_END = 39;
+      const NT_END = 66;
+
+      function fmt(s, ...args) {
+        return s.replace(/\{(\d+)\}/g, (m, i) => (args[+i] !== undefined ? String(args[+i]) : m));
+      }
+      const $ = (id) => document.getElementById(id);
+
+      let state = null; // last scan result
+      const ticked = new Set();
+      let optionsOpen = false;
+      let busy = false;
+
+      function setText() {
+        $('intro').textContent = S.intro;
+        $('lExclude').textContent = S.optExclude;
+        $('lNoClose').textContent = S.optNoClose;
+        $('lNoCloseInNote').textContent = S.optNoCloseInNote;
+        $('lExtra').textContent = S.optExtra;
+        $('lNoSpaceBefore').textContent = S.optNoSpaceBefore;
+        $('lFootnote').textContent = S.optFootnote;
+        $('lXref').textContent = S.optXref;
+        $('optionsHint').textContent = S.optionsHint;
+        $('saveOptionsBtn').textContent = S.saveRescan;
+        $('defaultsBtn').textContent = S.defaults;
+        $('lKind').textContent = S.kind;
+        $('lMarker').textContent = S.marker;
+        $('lShowByHand').textContent = S.showByHand;
+        $('hFix').textContent = S.colFix;
+        $('hRef').textContent = S.colRef;
+        $('hProblem').textContent = S.colProblem;
+        $('hNow').textContent = S.colNow;
+        $('hAfter').textContent = S.colAfter;
+        $('tickBtn').textContent = S.tickShown;
+        $('untickBtn').textContent = S.untickShown;
+        $('goToHint').textContent = S.goToHint;
+        $('rescanBtn').textContent = S.rescan;
+        $('optionsBtn').textContent = S.optionsShow;
+        $('confirmTitle').textContent = S.confirmTitle;
+        $('confirmYes').textContent = S.yes;
+        $('confirmNo').textContent = S.cancel;
+        $('booksTitle').textContent = S.booksTitle;
+        $('booksIntro').textContent = S.booksIntro;
+        $('booksOk').textContent = S.ok;
+        $('booksCancel').textContent = S.cancel;
+        $('project').textContent = fmt(S.project, BOOT.projectId);
+        updateFixButton();
+      }
+
+      function setBusy(on, text) {
+        busy = on;
+        $('status').className = on ? 'busy' : '';
+        if (text !== undefined) $('status').textContent = text;
+        ['rescanBtn', 'booksBtn', 'saveOptionsBtn', 'defaultsBtn', 'tickBtn', 'untickBtn'].forEach((id) => {
+          $(id).disabled = on;
+        });
+        updateFixButton();
+      }
+
+      function canFixRow(r) {
+        return r.canFix && state && state.canEdit;
+      }
+
+      function shownRows() {
+        if (!state) return [];
+        const kind = $('kindFilter').value;
+        const marker = $('markerFilter').value;
+        const byHand = $('showByHand').checked;
+        return state.rows.filter(
+          (r) =>
+            (byHand || REPORT_ONLY.indexOf(r.kind) < 0) &&
+            (kind === '' || String(r.kind) === kind) &&
+            (marker === '' || r.marker === marker),
+        );
+      }
+
+      function fillFilters() {
+        const kindSel = $('kindFilter');
+        const markerSel = $('markerFilter');
+        const keepKind = kindSel.value;
+        const keepMarker = markerSel.value;
+        const byHand = $('showByHand').checked;
+        const kinds = new Map();
+        const markers = new Map();
+        state.rows.forEach((r) => {
+          if (!byHand && REPORT_ONLY.indexOf(r.kind) >= 0) return;
+          kinds.set(r.kind, (kinds.get(r.kind) || 0) + 1);
+          markers.set(r.marker, (markers.get(r.marker) || 0) + 1);
+        });
+        kindSel.innerHTML = '';
+        markerSel.innerHTML = '';
+        kindSel.add(new Option(S.all, ''));
+        markerSel.add(new Option(S.all, ''));
+        Array.from(kinds.keys())
+          .sort((a, b) => a - b)
+          .forEach((k) => kindSel.add(new Option(`${S.kinds[k]} (${kinds.get(k)})`, String(k))));
+        Array.from(markers.keys())
+          .sort()
+          .forEach((m) => markerSel.add(new Option(`\\${m} (${markers.get(m)})`, m)));
+        kindSel.value = Array.from(kindSel.options).some((o) => o.value === keepKind) ? keepKind : '';
+        markerSel.value = Array.from(markerSel.options).some((o) => o.value === keepMarker) ? keepMarker : '';
+      }
+
+      function message(r) {
+        return fmt(S.messages[r.kind], r.shown, r.marker);
+      }
+
+      function renderRows() {
+        const body = $('rows');
+        body.innerHTML = '';
+        if (!state) return;
+        const rows = shownRows();
+        const frag = document.createDocumentFragment();
+        rows.slice(0, MAX_ROWS).forEach((r) => {
+          const tr = document.createElement('tr');
+          tr.dataset.id = r.id;
+          const tdBox = document.createElement('td');
+          if (canFixRow(r)) {
+            const box = document.createElement('input');
+            box.type = 'checkbox';
+            box.checked = ticked.has(r.id);
+            box.addEventListener('change', () => {
+              if (box.checked) ticked.add(r.id);
+              else ticked.delete(r.id);
+              updateCounts();
+            });
+            tdBox.appendChild(box);
+          }
+          tr.appendChild(tdBox);
+          const cells = [
+            [`${r.book} ${r.chapter}:${r.verse}`, 'ref'],
+            [message(r), ''],
+            [r.now, 'text'],
+            [r.canFix ? r.after : S.byHand, r.canFix ? 'text' : 'byhand'],
+          ];
+          cells.forEach(([text, cls]) => {
+            const td = document.createElement('td');
+            if (cls) td.className = cls;
+            td.textContent = text;
+            tr.appendChild(td);
+          });
+          tr.addEventListener('dblclick', () => {
+            papi.commands
+              .sendCommand('markerSpaces.goTo', BOOT.projectId, r.book, r.chapter, r.verse)
+              .catch((e) => logger.warn(`Marker Spaces go to failed: ${e}`));
+          });
+          frag.appendChild(tr);
+        });
+        body.appendChild(frag);
+        updateCounts();
+      }
+
+      function updateCounts() {
+        if (!state) return;
+        const rows = shownRows();
+        let text;
+        if (state.rows.length === 0) text = S.noProblems;
+        else {
+          text = fmt(S.counts, rows.length, rows.filter(canFixRow).length, ticked.size);
+          if (rows.length > MAX_ROWS) text += ' ' + fmt(S.tooMany, MAX_ROWS);
+          if (!state.canEdit) text += ' ' + S.noPermissionProject;
+        }
+        if (state.failed && state.failed.length) text += ' ' + fmt(S.readFailed, state.failed.join('; '));
+        $('status').textContent = text;
+        updateFixButton();
+      }
+
+      function updateFixButton() {
+        $('fixBtn').textContent = fmt(S.fix, ticked.size);
+        $('fixBtn').disabled = busy || ticked.size === 0;
+      }
+
+      function fillOptions(o) {
+        $('oExclude').value = o.excludeMarkers || '';
+        $('oNoClose').value = o.noCloseMarkers || '';
+        $('oNoCloseInNote').value = o.noCloseInNoteMarkers || '';
+        $('oExtra').value = o.extraSpacingMarkers || '';
+        $('oNoSpaceBefore').value = o.noSpaceBeforeMarkers || '';
+        $('oFootnote').checked = !!o.footnotePrecedesText;
+        $('oXref').checked = !!o.crossReferencesPrecedeText;
+      }
+
+      function readOptions() {
+        return Object.assign({}, state.options, {
+          excludeMarkers: $('oExclude').value.trim(),
+          noCloseMarkers: $('oNoClose').value.trim(),
+          noCloseInNoteMarkers: $('oNoCloseInNote').value.trim(),
+          extraSpacingMarkers: $('oExtra').value.trim(),
+          noSpaceBeforeMarkers: $('oNoSpaceBefore').value.trim(),
+          footnotePrecedesText: $('oFootnote').checked,
+          crossReferencesPrecedeText: $('oXref').checked,
+        });
+      }
+
+      async function scan() {
+        setBusy(true, S.scanning);
+        $('rows').innerHTML = '';
+        try {
+          state = await papi.commands.sendCommand('markerSpaces.scan', BOOT.projectId);
+          ticked.clear();
+          $('project').textContent = fmt(S.project, state.projectName);
+          const chosen = state.books.filter((b) => b.chosen).length;
+          $('booksBtn').textContent = fmt(S.booksButton, chosen, state.books.length);
+          fillOptions(state.options);
+          fillFilters();
+          setBusy(false);
+          renderRows();
+        } catch (e) {
+          setBusy(false, fmt(S.error, e && e.message ? e.message : e));
+        }
+      }
+
+      async function saveOptions(options) {
+        setBusy(true, S.scanning);
+        try {
+          await papi.commands.sendCommand('markerSpaces.saveOptions', BOOT.projectId, options);
+        } catch (e) {
+          setBusy(false, fmt(S.error, e && e.message ? e.message : e));
+          return;
+        }
+        await scan();
+      }
+
+      // ---------------------------------------------------------------- fixing
+
+      function askFix() {
+        if (ticked.size === 0) {
+          $('results').textContent = S.nothingTicked;
+          return;
+        }
+        const books = new Set(state.rows.filter((r) => ticked.has(r.id)).map((r) => r.book));
+        $('confirmText').textContent = fmt(S.confirm, ticked.size, books.size);
+        $('confirmOverlay').classList.add('show');
+        $('confirmYes').focus();
+      }
+
+      async function doFix() {
+        $('confirmOverlay').classList.remove('show');
+        setBusy(true, S.fixing);
+        let report;
+        try {
+          report = await papi.commands.sendCommand('markerSpaces.fix', BOOT.projectId, Array.from(ticked));
+        } catch (e) {
+          setBusy(false);
+          $('results').className = '';
+          $('results').textContent = fmt(S.error, e && e.message ? e.message : e);
+          return;
+        }
+        const lines = [];
+        if (report.noPermission) lines.push(S.resNoPermission);
+        report.fixed.forEach((f) => lines.push(fmt(S.resFixed, f.book, f.count)));
+        if (report.total > 0) lines.push(fmt(S.resTotal, report.total, report.booksChanged));
+        else if (!report.noPermission) lines.push(S.resNothing);
+        if (report.changed.length) lines.push(fmt(S.resChanged, report.changed.join(', ')));
+        if (report.failed.length) lines.push(fmt(S.resFailed, report.failed.join('; ')));
+        if (report.backups.length) lines.push(fmt(S.resBackups, report.backups.length));
+        $('results').className = report.total > 0 && !report.failed.length ? 'ok' : '';
+        $('results').textContent = lines.join('\n');
+        await scan();
+      }
+
+      // ---------------------------------------------------------------- books
+
+      let bookChoice = null;
+      function openBooks() {
+        bookChoice = new Map(state.books.map((b) => [b.code, b.chosen]));
+        const quick = $('bookQuick');
+        quick.innerHTML = '';
+        const groups = [
+          [S.booksAll, () => true],
+          [S.booksNone, () => false],
+          [S.booksBible, (b) => !isOther(b.code)],
+          [S.booksOT, (b) => b.num <= OT_END],
+          [S.booksNT, (b) => b.num > OT_END && b.num <= NT_END],
+          [S.booksDC, (b) => b.num > NT_END && !isOther(b.code)],
+          [S.booksOther, (b) => isOther(b.code)],
+        ];
+        groups.forEach(([label, test]) => {
+          const btn = document.createElement('button');
+          btn.type = 'button';
+          btn.textContent = label;
+          btn.addEventListener('click', () => {
+            state.books.forEach((b) => bookChoice.set(b.code, test(b)));
+            drawBooks();
+          });
+          quick.appendChild(btn);
+        });
+        drawBooks();
+        $('booksError').textContent = '';
+        $('booksOverlay').classList.add('show');
+      }
+
+      const OTHER = 'FRT BAK OTH INT CNC GLO TDX NDX XXA XXB XXC XXD XXE XXF XXG'.split(' ');
+      function isOther(code) {
+        return OTHER.indexOf(code) >= 0;
+      }
+
+      function drawBooks() {
+        const grid = $('bookGrid');
+        grid.innerHTML = '';
+        state.books.forEach((b) => {
+          const label = document.createElement('label');
+          const box = document.createElement('input');
+          box.type = 'checkbox';
+          box.checked = !!bookChoice.get(b.code);
+          box.addEventListener('change', () => bookChoice.set(b.code, box.checked));
+          label.appendChild(box);
+          label.appendChild(document.createTextNode(' ' + b.code));
+          grid.appendChild(label);
+        });
+      }
+
+      async function booksOk() {
+        const chosen = state.books.filter((b) => bookChoice.get(b.code));
+        if (chosen.length === 0) {
+          $('booksError').textContent = S.booksNoneChosen;
+          return;
+        }
+        $('booksOverlay').classList.remove('show');
+        const excluded = state.books.filter((b) => !bookChoice.get(b.code)).map((b) => b.code);
+        await saveOptions(Object.assign({}, state.options, { excludedBooks: excluded.join(' ') }));
+      }
+
+      // ---------------------------------------------------------------- events
+
+      $('rescanBtn').addEventListener('click', scan);
+      $('optionsBtn').addEventListener('click', () => {
+        optionsOpen = !optionsOpen;
+        $('optionsPanel').classList.toggle('hidden', !optionsOpen);
+        $('optionsBtn').textContent = optionsOpen ? S.optionsHide : S.optionsShow;
+      });
+      $('saveOptionsBtn').addEventListener('click', () => saveOptions(readOptions()));
+      $('defaultsBtn').addEventListener('click', () => saveOptions({ excludedBooks: null }));
+      $('kindFilter').addEventListener('change', renderRows);
+      $('markerFilter').addEventListener('change', renderRows);
+      $('showByHand').addEventListener('change', () => {
+        fillFilters();
+        renderRows();
+      });
+      $('tickBtn').addEventListener('click', () => {
+        shownRows()
+          .slice(0, MAX_ROWS)
+          .filter(canFixRow)
+          .forEach((r) => ticked.add(r.id));
+        renderRows();
+      });
+      $('untickBtn').addEventListener('click', () => {
+        shownRows().forEach((r) => ticked.delete(r.id));
+        renderRows();
+      });
+      $('fixBtn').addEventListener('click', askFix);
+      $('confirmYes').addEventListener('click', doFix);
+      $('confirmNo').addEventListener('click', () => $('confirmOverlay').classList.remove('show'));
+      $('booksBtn').addEventListener('click', openBooks);
+      $('booksOk').addEventListener('click', booksOk);
+      $('booksCancel').addEventListener('click', () => $('booksOverlay').classList.remove('show'));
+
+      setText();
+      $('booksBtn').textContent = fmt(S.booksButton, '-', '-');
+      scan();
+    </script>
+  </body>
+</html>

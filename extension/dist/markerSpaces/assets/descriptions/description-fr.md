@@ -1,0 +1,1 @@
+Trouve les problèmes d'espacement autour des marqueurs de caractères, des notes de bas de page et des références croisées (par exemple `\nd Dieu \nd*` ou `mot\nd`). Les problèmes apparaissent dans le panneau des vérifications (Outils > Vérifications de base), et Outils > Espaces autour des marqueurs... ouvre une fenêtre où l'on coche ceux à corriger.

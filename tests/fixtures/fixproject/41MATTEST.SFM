@@ -1,0 +1,24 @@
+\id MAT Marker Spaces test fixture
+\c 1
+\p
+\v 1 El \nd Señor \nd*dijo.
+\v 2 El \nd Dios \nd* dijo.
+\v 3 de \nd Jesús \nd* , y luego.
+\v 4 del\nd SEÑOR\nd* vino.
+\v 5 hijo. \f + \fr 1:5 \ft Nota.\f* Luego.
+\v 6 \f + \fr 1:6 \ft Nota.\f* Texto.
+\v 7 \it palabra\it* .
+\v 8 la \x - \xo 1:8 \xt Gn 1:1\x* palabra.
+\v 9 texto\f + \fr 1:9\ft nota.\f* sigue.
+\v 10 \w palabra |lema\w* fin.
+\v 11 Me~\w Diu\w* dijo.
+\v 12 \nd Dios~\nd* dijo.
+\v 13 \bd sin cierre.
+\v 14 texto\f + \fq algo\fq* nota.\f* fin.
+\v 15 \nd \nd* x.
+\v 16 \bd negrita\bd*texto.
+\v 17 \nd uno\nd*\bd dos\bd* fin.
+\c 2
+\p
+\v 1 El \nd Señor \nd*dijo.
+\v 2 \it palabra\it* .

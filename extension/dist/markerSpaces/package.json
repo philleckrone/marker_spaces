@@ -1,0 +1,9 @@
+{
+  "name": "marker-spaces",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Marker Spaces for Paratext 10: finds and fixes spacing problems around USFM character markers",
+  "main": "src/main.js",
+  "author": "Phil Leckrone",
+  "license": "MIT"
+}

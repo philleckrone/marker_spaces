@@ -1,0 +1,22 @@
+{
+  "icon": "",
+  "moreInfoUrl": "",
+  "supportUrl": "",
+  "localizedDisplayInfo": {
+    "en": {
+      "displayName": "Marker Spaces",
+      "shortSummary": "Finds and fixes spacing problems around USFM character markers",
+      "description": "assets/descriptions/description-en.md"
+    },
+    "es": {
+      "displayName": "Espacios de marcadores",
+      "shortSummary": "Encuentra y corrige problemas de espaciado alrededor de los marcadores de caracteres USFM",
+      "description": "assets/descriptions/description-es.md"
+    },
+    "fr": {
+      "displayName": "Espaces autour des marqueurs",
+      "shortSummary": "Trouve et corrige les problèmes d'espacement autour des marqueurs de caractères USFM",
+      "description": "assets/descriptions/description-fr.md"
+    }
+  }
+}

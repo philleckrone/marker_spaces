@@ -1,0 +1,17 @@
+{
+  "name": "markerSpaces",
+  "version": "0.1.0",
+  "publisher": "philLeckrone",
+  "displayData": "assets/displayData.json",
+  "author": "Phil Leckrone",
+  "license": "MIT",
+  "main": "src/main.js",
+  "extensionDependencies": {},
+  "elevatedPrivileges": [],
+  "menus": "contributions/menus.json",
+  "settings": "contributions/settings.json",
+  "projectSettings": "contributions/projectSettings.json",
+  "localizedStrings": "contributions/localizedStrings.json",
+  "themes": "contributions/themes.json",
+  "activationEvents": []
+}

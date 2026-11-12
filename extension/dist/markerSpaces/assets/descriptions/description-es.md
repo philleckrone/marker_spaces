@@ -1,0 +1,1 @@
+Encuentra problemas de espaciado alrededor de marcadores de caracteres, notas al pie y referencias cruzadas (por ejemplo `\nd Dios \nd*` o `palabra\nd`). Los problemas aparecen en el panel de verificaciones (Herramientas > Verificaciones básicas), y Herramientas > Espacios de marcadores... abre una ventana donde se marcan los que se desean corregir.

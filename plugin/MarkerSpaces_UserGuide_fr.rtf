@@ -1,0 +1,53 @@
+{\rtf1\ansi\ansicpg1252\deff0\nouicompat{\fonttbl{\f0\fswiss\fcharset0 Arial;}}
+\viewkind4\uc1
+\pard\sa200\sl276\slmult1\f0\fs28\b ESPACES AUTOUR DES MARQUEURS 1.3 (MODULE PARATEXT)\b0\fs22\par
+\par
+\b BUT\b0\par
+Espaces autour des marqueurs est un module compl\'e9mentaire (plugin) de Paratext. Il trouve les erreurs d'espacement autour des marqueurs (les m\'eames probl\'e8mes que la v\'e9rification personnalis\'e9e \'ab Report of Marker spaces \'bb) et vous laisse choisir celles \'e0 corriger. Comme Paratext lui-m\'eame, il ne modifie que les chapitres que vous avez l'autorisation de modifier.\par
+Il v\'e9rifie chaque marqueur de caract\'e8res de usfm.sty et du custom.sty du projet (\\nd, \\add, \\w, \\tl, ...), les notes de bas de page (\\f) et les r\'e9f\'e9rences crois\'e9es (\\x) :\par
+\tab Espace manquante avant un marqueur d'ouverture : "del\\nd SE\'d1OR\\nd*" devient "del \\nd SE\'d1OR\\nd*".\par
+\tab Espace avant \\f ou \\x, qui s'attachent au mot qui les pr\'e9c\'e8de : "hijo. \\f + ..." devient "hijo.\\f + ...".\par
+\tab Espace avant un marqueur de fermeture : "\\nd Dios \\nd*" devient "\\nd Dios\\nd*". Quand rien ne s\'e9pare le marqueur de fermeture du mot suivant ("\\nd Se\'f1or \\nd*dijo"), l'espace est d\'e9plac\'e9e \'e0 l'ext\'e9rieur : "\\nd Se\'f1or\\nd* dijo".\par
+\tab Espace manquante apr\'e8s un marqueur de fermeture : "\\bd negrita\\bd*texto" devient "\\bd negrita\\bd* texto".\par
+\tab Espace avant la ponctuation apr\'e8s un marqueur de fermeture : "\\it palabra\\it* ." devient "\\it palabra\\it*.".\par
+\tab Espace apr\'e8s \\x* (ou \\f*) quand la note vient avant le mot auquel elle se rapporte : "\\x*\'b7palabra" devient "\\x*palabra".\par
+\tab Espace manquante avant \\v, \\ft, \\fr et les marqueurs semblables : "\\fr 1:9\\ft" devient "\\fr 1:9 \\ft".\par
+\tab Espace avant | dans \\w...\\w* : "\\w palabra |lema\\w*" devient "\\w palabra|lema\\w*".\par
+Les marqueurs non ferm\'e9s et les marqueurs de fermeture de marqueurs qui n'en prennent pas (par exemple \\fq*) sont aussi list\'e9s, mais ils doivent \'eatre corrig\'e9s \'e0 la main.\par
+"~" (l'espace ins\'e9cable de Paratext) compte partout comme une espace.\par
+\par
+\b INSTALLATION\b0\par
+1. T\'e9l\'e9chargez Install_Phils_tools.exe depuis le dossier Paratext_Plugins. Si le navigateur vous avertit au sujet du fichier, choisissez de le conserver.\par
+2. Fermez Paratext.\par
+3. Double-cliquez sur Install_Phils_tools.exe. Si Windows indique qu'il a prot\'e9g\'e9 votre ordinateur, cliquez sur \'ab Informations compl\'e9mentaires \'bb, puis sur \'ab Ex\'e9cuter quand m\'eame \'bb (l'installateur n'est pas encore sign\'e9).\par
+4. Cochez Espaces autour des marqueurs et cliquez sur \'ab Installer / mettre \'e0 jour \'bb. Il s'installe dans chaque Paratext 9 de l'ordinateur. Si Windows demande l'autorisation, cliquez sur Oui. La m\'eame fen\'eatre met le module \'e0 jour plus tard (son statut indique alors \'ab Mise \'e0 jour disponible \'bb) ou le retire (\'ab Supprimer les coch\'e9s \'bb), et son bouton \'ab Guide de l'utilisateur \'bb ouvre ce guide.\par
+\par
+\b UTILISATION\b0\par
+1. Ouvrez le projet dans une fen\'eatre de texte biblique et choisissez Outils > Espaces autour des marqueurs...\par
+2. La fen\'eatre analyse les livres choisis (voir CHOIX DES LIVRES plus bas) et liste une ligne par probl\'e8me : la r\'e9f\'e9rence, le probl\'e8me, le texte actuel et le texte apr\'e8s correction. Dans les colonnes \'ab Actuel \'bb et \'ab Apr\'e8s correction \'bb, un point (\'b7) indique l'espace supprim\'e9e ou ajout\'e9e. Rien n'est encore modifi\'e9.\par
+3. Utilisez \'ab Probl\'e8me \'bb et \'ab Marqueur \'bb pour n'afficher qu'un type de probl\'e8me ou un marqueur. Cochez \'ab Afficher aussi les probl\'e8mes \'e0 corriger \'e0 la main \'bb pour voir aussi les marqueurs non ferm\'e9s et les fermetures inattendues.\par
+4. Double-cliquez sur une ligne pour aller \'e0 ce verset dans Paratext. La fen\'eatre reste ouverte \'e0 c\'f4t\'e9 de Paratext.\par
+5. Cochez les probl\'e8mes \'e0 corriger. \'ab Cocher toutes les lignes affich\'e9es \'bb et \'ab D\'e9cocher toutes les lignes affich\'e9es \'bb agissent sur les lignes affich\'e9es. Les lignes des chapitres que vous ne pouvez pas modifier sont gris\'e9es et marqu\'e9es \'ab non modifiable \'bb ; elles ne peuvent pas \'eatre coch\'e9es.\par
+6. Cliquez sur \'ab Corriger les probl\'e8mes coch\'e9s \'bb et r\'e9pondez Oui.\par
+\par
+\b CHOIX DES LIVRES\b0\par
+Le bouton \'ab Livres : 66 sur 79... \'bb indique combien de livres du projet sont analys\'e9s. Cliquez dessus pour les choisir : cochez les livres \'e0 analyser, ou utilisez les boutons Tous, Aucun, Livres de la Bible, Ancien Testament, Nouveau Testament, Deut\'e9rocanoniques et Autres livres. Les livres non coch\'e9s ne sont pas lus du tout ; ils n'affichent donc aucun probl\'e8me et ne sont jamais modifi\'e9s. Cliquez sur OK : le choix est enregistr\'e9 pour ce projet et les livres sont analys\'e9s de nouveau.\par
+Tant que vous n'avez rien choisi, les livres de la Bible sont analys\'e9s (Ancien Testament, Nouveau Testament et Deut\'e9rocanoniques). Les autres livres sont laiss\'e9s de c\'f4t\'e9 : les pages liminaires et finales (FRT, BAK, OTH, INT), le glossaire et les index (GLO, TDX, NDX), la concordance (CNC) et les livres suppl\'e9mentaires XXA \'e0 XXG. \'ab R\'e9tablir les valeurs par d\'e9faut \'bb dans les options revient aussi \'e0 ce choix.\par
+\par
+\b CE QUI SE PASSE LORS DE LA CORRECTION\b0\par
+1. Un point est ajout\'e9 \'e0 l'historique du projet (\'ab Espaces autour des marqueurs : avant de corriger ... \'bb). Si Paratext ne peut pas l'enregistrer (par exemple parce que le projet est en cours d'utilisation), rien n'est modifi\'e9 et la fen\'eatre l'indique.\par
+2. Chaque livre qui va changer est enregistr\'e9 en entier sous le nom Backup_LIVRE_date-heure.bak dans le dossier local\\MarkerSpaces du projet, qu'Envoyer/Recevoir ne partage pas.\par
+3. Seuls les probl\'e8mes coch\'e9s sont corrig\'e9s, et seules les espaces changent : aucune lettre ni aucun marqueur n'est ajout\'e9 ou supprim\'e9. Chaque chapitre est \'e9crit s\'e9par\'e9ment, et seulement si vous pouvez le modifier.\par
+4. Si le texte d'un chapitre a chang\'e9 apr\'e8s l'analyse (par exemple, vous l'avez modifi\'e9 dans Paratext), ce chapitre n'est pas touch\'e9 et il est list\'e9 : cliquez sur \'ab Analyser de nouveau \'bb et r\'e9essayez.\par
+5. La zone des r\'e9sultats liste ce qui a \'e9t\'e9 corrig\'e9 dans chaque livre, et ce qui n'a pas \'e9t\'e9 modifi\'e9. La liste est ensuite analys\'e9e de nouveau.\par
+\par
+\b OPTIONS\b0\par
+Cliquez sur \'ab Options... \'bb pour changer ce qui est v\'e9rifi\'e9. Ce sont les options de la v\'e9rification personnalis\'e9e ; elles sont enregistr\'e9es pour ce projet (dans local\\MarkerSpaces\\settings.xml). Cliquez sur \'ab Enregistrer les options et analyser de nouveau \'bb pour les appliquer.\par
+\tab Codes de marqueurs \'e0 exclure : marqueurs qui suivent une autre r\'e8gle d'espacement dans ce projet (par exemple : w rq).\par
+\tab Marqueurs qui n'exigent pas de marqueur de fermeture : v fk fp fq fqa ft fr xk xo xq par d\'e9faut.\par
+\tab Marqueurs qui n'exigent pas de marqueur de fermeture seulement dans une note de bas de page/r\'e9f\'e9rence crois\'e9e : xt par d\'e9faut.\par
+\tab Autres marqueurs dont l'espacement est \'e0 v\'e9rifier : f x par d\'e9faut.\par
+\tab Marqueurs qui ne doivent PAS \'eatre pr\'e9c\'e9d\'e9s d'une espace : f x par d\'e9faut.\par
+\tab La note pr\'e9c\'e8de le texte : cochez-la si les notes de bas de page viennent avant le mot auquel elles se rapportent.\par
+\tab Les r\'e9f\'e9rences crois\'e9es se trouvent avant le mot : coch\'e9e par d\'e9faut ; d\'e9cochez-la si les r\'e9f\'e9rences crois\'e9es suivent le mot, attach\'e9es \'e0 lui.\par
+}

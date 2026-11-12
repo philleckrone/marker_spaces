@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props"
+          Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <!-- Test host only: never deployed. Builds the plugin's Paratext-free sources into an exe. -->
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <OutputType>WinExe</OutputType>
+    <RootNamespace>MarkerSpacesTests</RootNamespace>
+    <AssemblyName>MarkerSpacesTestHost</AssemblyName>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <LangVersion>5</LangVersion>
+    <OutputPath>bin\$(Configuration)\</OutputPath>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\..\MarkerSpacesPlugin\BookChooserForm.cs">
+      <Link>BookChooserForm.cs</Link>
+    </Compile>
+    <Compile Include="..\..\MarkerSpacesPlugin\FixRunner.cs">
+      <Link>FixRunner.cs</Link>
+    </Compile>
+    <Compile Include="..\..\MarkerSpacesPlugin\IBookSource.cs">
+      <Link>IBookSource.cs</Link>
+    </Compile>
+    <Compile Include="..\..\MarkerSpacesPlugin\MarkerSpaceScanner.cs">
+      <Link>MarkerSpaceScanner.cs</Link>
+    </Compile>
+    <Compile Include="..\..\MarkerSpacesPlugin\MarkerSpacesForm.cs">
+      <Link>MarkerSpacesForm.cs</Link>
+    </Compile>
+    <Compile Include="..\..\MarkerSpacesPlugin\ProjectScan.cs">
+      <Link>ProjectScan.cs</Link>
+    </Compile>
+    <Compile Include="..\..\MarkerSpacesPlugin\ScanOptions.cs">
+      <Link>ScanOptions.cs</Link>
+    </Compile>
+    <Compile Include="..\..\MarkerSpacesPlugin\Strings.cs">
+      <Link>Strings.cs</Link>
+    </Compile>
+    <Compile Include="..\..\MarkerSpacesPlugin\StyleSheets.cs">
+      <Link>StyleSheets.cs</Link>
+    </Compile>
+    <Compile Include="FolderBookSource.cs" />
+    <Compile Include="Program.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="..\..\MarkerSpacesPlugin\Resources\usfm.sty">
+      <LogicalName>MarkerSpaces.usfm.sty</LogicalName>
+    </EmbeddedResource>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

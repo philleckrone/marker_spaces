@@ -1,0 +1,1 @@
+Finds spacing problems around character markers, footnotes and cross-references (for example `\nd Dios \nd*` or `word\nd`). The problems are listed in the Checks panel (Tools > Basic checks), and Tools > Marker Spaces... opens a window where you tick the ones to fix.

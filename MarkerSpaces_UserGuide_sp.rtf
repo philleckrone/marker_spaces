@@ -1,0 +1,53 @@
+{\rtf1\ansi\ansicpg1252\deff0\nouicompat{\fonttbl{\f0\fswiss\fcharset0 Arial;}}
+\viewkind4\uc1
+\pard\sa200\sl276\slmult1\f0\fs28\b ESPACIOS DE MARCADORES 1.3 (COMPLEMENTO DE PARATEXT)\b0\fs22\par
+\par
+\b PROP\'d3SITO\b0\par
+Espacios de marcadores es un complemento de Paratext. Encuentra errores de espaciado alrededor de los marcadores (los mismos problemas que la verificaci\'f3n personalizada "Report of Marker spaces") y le permite escoger cu\'e1les corregir. Igual que Paratext, solo cambia los cap\'edtulos que usted tiene permiso para editar.\par
+Revisa todos los marcadores de caracteres de usfm.sty y del custom.sty del proyecto (\\nd, \\add, \\w, \\tl, ...), las notas al pie (\\f) y las referencias cruzadas (\\x):\par
+\tab Falta espacio antes de un marcador de apertura: "del\\nd SE\'d1OR\\nd*" pasa a "del \\nd SE\'d1OR\\nd*".\par
+\tab Espacio antes de \\f o \\x, que se pegan a la palabra anterior: "hijo. \\f + ..." pasa a "hijo.\\f + ...".\par
+\tab Espacio antes de un marcador de cierre: "\\nd Dios \\nd*" pasa a "\\nd Dios\\nd*". Cuando nada separa el marcador de cierre de la palabra siguiente ("\\nd Se\'f1or \\nd*dijo"), el espacio se pasa afuera: "\\nd Se\'f1or\\nd* dijo".\par
+\tab Falta espacio despu\'e9s de un marcador de cierre: "\\bd negrita\\bd*texto" pasa a "\\bd negrita\\bd* texto".\par
+\tab Espacio antes de la puntuaci\'f3n despu\'e9s de un marcador de cierre: "\\it palabra\\it* ." pasa a "\\it palabra\\it*.".\par
+\tab Espacio despu\'e9s de \\x* (o \\f*) cuando la nota va antes de la palabra a la que pertenece: "\\x*\'b7palabra" pasa a "\\x*palabra".\par
+\tab Falta espacio antes de \\v, \\ft, \\fr y marcadores parecidos: "\\fr 1:9\\ft" pasa a "\\fr 1:9 \\ft".\par
+\tab Espacio antes de | en \\w...\\w*: "\\w palabra |lema\\w*" pasa a "\\w palabra|lema\\w*".\par
+Tambi\'e9n se muestran los marcadores sin cerrar y los cierres de marcadores que no se cierran (por ejemplo \\fq*), pero hay que corregirlos a mano.\par
+"~" (el espacio de no separaci\'f3n de Paratext) cuenta como espacio en todos los casos.\par
+\par
+\b INSTALACI\'d3N\b0\par
+1. Descargue Install_Phils_tools.exe de la carpeta Paratext_Plugins. Si el navegador le advierte sobre el archivo, elija conservarlo.\par
+2. Cierre Paratext.\par
+3. Haga doble clic en Install_Phils_tools.exe. Si Windows dice que protegi\'f3 su PC, haga clic en "M\'e1s informaci\'f3n" y luego en "Ejecutar de todas formas" (el instalador todav\'eda no est\'e1 firmado).\par
+4. Marque Espacios de marcadores y haga clic en "Instalar / actualizar los marcados". Se instala en cada Paratext 9 del equipo. Si Windows le pide permiso, haga clic en S\'ed. La misma ventana actualiza el complemento m\'e1s adelante (su estado dice entonces "Actualizaci\'f3n disponible") o lo quita ("Quitar los marcados"), y su bot\'f3n "Gu\'eda del usuario" abre esta gu\'eda.\par
+\par
+\b C\'d3MO USARLO\b0\par
+1. Abra el proyecto en una ventana de Escritura y elija Herramientas > Espacios de marcadores...\par
+2. La ventana revisa los libros escogidos (vea ESCOGER LOS LIBROS m\'e1s abajo) y muestra una fila por problema: la referencia, el problema, el texto ahora y el texto despu\'e9s de la correcci\'f3n. En las columnas "Ahora" y "Despu\'e9s" un punto (\'b7) indica el espacio que se quita o se agrega. Todav\'eda no se cambia nada.\par
+3. Use "Problema" y "Marcador" para mostrar solo un tipo de problema o un marcador. Marque "Mostrar tambi\'e9n los problemas que hay que corregir a mano" para ver tambi\'e9n los marcadores sin cerrar y los cierres inesperados.\par
+4. Haga doble clic en una fila para ir a ese vers\'edculo en Paratext. La ventana queda abierta junto a Paratext.\par
+5. Marque los problemas que desea corregir. "Marcar todos los mostrados" y "Desmarcar todos los mostrados" act\'faan sobre las filas mostradas. Las filas de cap\'edtulos que usted no puede editar aparecen en gris con "no puede editar" y no se pueden marcar.\par
+6. Haga clic en "Corregir los problemas marcados" y responda S\'ed.\par
+\par
+\b ESCOGER LOS LIBROS\b0\par
+El bot\'f3n "Libros: 66 de 79..." indica cu\'e1ntos libros del proyecto se revisan. Haga clic en \'e9l para escogerlos: marque los libros que desea revisar, o use los botones Todos, Ninguno, Libros de la Biblia, Antiguo Testamento, Nuevo Testamento, Deuterocan\'f3nicos y Otros libros. Los libros sin marcar no se leen, as\'ed que no muestran problemas y nunca se cambian. Haga clic en Aceptar: la selecci\'f3n se guarda para este proyecto y los libros se revisan de nuevo.\par
+Mientras usted no escoja, se revisan los libros de la Biblia (Antiguo Testamento, Nuevo Testamento y Deuterocan\'f3nicos). Los dem\'e1s quedan fuera: las p\'e1ginas preliminares y finales (FRT, BAK, OTH, INT), el glosario y los \'edndices (GLO, TDX, NDX), la concordancia (CNC) y los libros adicionales XXA a XXG. "Restaurar valores predeterminados" en las opciones tambi\'e9n vuelve a esta selecci\'f3n.\par
+\par
+\b QU\'c9 PASA AL CORREGIR\b0\par
+1. Se agrega un punto al historial del proyecto ("Espacios de marcadores: antes de corregir ..."). Si Paratext no puede registrarlo (por ejemplo porque el proyecto est\'e1 en uso), no se cambia nada y la ventana lo indica.\par
+2. Cada libro que va a cambiar se guarda completo como Backup_LIBRO_fecha-hora.bak en la carpeta local\\MarkerSpaces del proyecto, que Enviar/Recibir no comparte.\par
+3. Solo se cambian los problemas marcados, y solo los espacios: no se agregan ni se quitan letras ni marcadores. Cada cap\'edtulo se escribe por separado, y solo si usted puede editarlo.\par
+4. Si el texto de un cap\'edtulo cambi\'f3 despu\'e9s de la revisi\'f3n (por ejemplo, lo edit\'f3 en Paratext), ese cap\'edtulo no se toca y se muestra en la lista: haga clic en "Revisar de nuevo" y vuelva a intentarlo.\par
+5. El cuadro de resultados muestra lo que se corrigi\'f3 en cada libro y lo que no se cambi\'f3. Luego la lista se revisa de nuevo.\par
+\par
+\b OPCIONES\b0\par
+Haga clic en "Opciones..." para cambiar lo que se revisa. Son las opciones de la verificaci\'f3n personalizada, y se guardan para este proyecto (en local\\MarkerSpaces\\settings.xml). Haga clic en "Guardar opciones y revisar de nuevo" para usarlas.\par
+\tab C\'f3digos de marcador a excluir: marcadores que siguen otra regla de espaciado en este proyecto (por ejemplo: w rq).\par
+\tab Marcadores que no requieren un marcador de cierre: v fk fp fq fqa ft fr xk xo xq de forma predeterminada.\par
+\tab Marcadores que no requieren un marcador de cierre solo dentro de una nota al pie/referencia cruzada: xt de forma predeterminada.\par
+\tab Marcadores adicionales para verificar el espaciado: f x de forma predeterminada.\par
+\tab Marcadores que NO deben tener espacio antes: f x de forma predeterminada.\par
+\tab La nota precede al texto: m\'e1rquelo si las notas al pie van antes de la palabra a la que pertenecen.\par
+\tab Las referencias cruzadas ocurren antes de la palabra: marcado de forma predeterminada; desm\'e1rquelo si las referencias cruzadas van despu\'e9s de la palabra, pegadas a ella.\par
+}

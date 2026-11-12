@@ -1,0 +1,50 @@
+{
+  "metadata": {},
+  "localizedStrings": {
+    "en": {
+      "%markerSpaces_menu_open%": "Marker Spaces...",
+      "%markerSpaces_checkName%": "Marker spaces",
+      "%markerSpaces_checkDescription%": "Spacing problems around character markers, footnotes and cross-references (Marker Spaces)",
+      "%markerSpaces_message_A%": "Missing space before {marker}",
+      "%markerSpaces_message_B%": "Unwanted space before {marker}",
+      "%markerSpaces_message_C%": "Unwanted space before {marker}",
+      "%markerSpaces_message_D%": "Missing space after {marker}",
+      "%markerSpaces_message_E%": "Unwanted space before punctuation after {marker}",
+      "%markerSpaces_message_F%": "Unwanted space after {marker} (precedes text)",
+      "%markerSpaces_message_NoCloseSpace%": "Missing space before {marker}",
+      "%markerSpaces_message_WPipe%": "Unwanted space before | in a word-level marker (produces a double space)",
+      "%markerSpaces_message_Unclosed%": "Unclosed {marker} (no matching {close} found)",
+      "%markerSpaces_message_Unexpected%": "Unexpected {marker} ({base} is not normally closed)"
+    },
+    "es": {
+      "%markerSpaces_menu_open%": "Espacios de marcadores...",
+      "%markerSpaces_checkName%": "Espacios de marcadores",
+      "%markerSpaces_checkDescription%": "Problemas de espaciado alrededor de marcadores de caracteres, notas al pie y referencias cruzadas (Espacios de marcadores)",
+      "%markerSpaces_message_A%": "Falta espacio antes de {marker}",
+      "%markerSpaces_message_B%": "Espacio no deseado antes de {marker}",
+      "%markerSpaces_message_C%": "Espacio no deseado antes de {marker}",
+      "%markerSpaces_message_D%": "Falta espacio después de {marker}",
+      "%markerSpaces_message_E%": "Espacio no deseado antes de la puntuación después de {marker}",
+      "%markerSpaces_message_F%": "Espacio no deseado después de {marker} (precede al texto)",
+      "%markerSpaces_message_NoCloseSpace%": "Falta espacio antes de {marker}",
+      "%markerSpaces_message_WPipe%": "Espacio no deseado antes de | en un marcador de palabra (produce un espacio doble)",
+      "%markerSpaces_message_Unclosed%": "{marker} sin cerrar (no se encontró {close})",
+      "%markerSpaces_message_Unexpected%": "{marker} inesperado ({base} normalmente no se cierra)"
+    },
+    "fr": {
+      "%markerSpaces_menu_open%": "Espaces autour des marqueurs...",
+      "%markerSpaces_checkName%": "Espaces autour des marqueurs",
+      "%markerSpaces_checkDescription%": "Problèmes d’espacement autour des marqueurs de caractères, des notes et des références croisées (Espaces autour des marqueurs)",
+      "%markerSpaces_message_A%": "Espace manquante avant {marker}",
+      "%markerSpaces_message_B%": "Espace superflue avant {marker}",
+      "%markerSpaces_message_C%": "Espace superflue avant {marker}",
+      "%markerSpaces_message_D%": "Espace manquante après {marker}",
+      "%markerSpaces_message_E%": "Espace superflue avant la ponctuation après {marker}",
+      "%markerSpaces_message_F%": "Espace superflue après {marker} (précède le texte)",
+      "%markerSpaces_message_NoCloseSpace%": "Espace manquante avant {marker}",
+      "%markerSpaces_message_WPipe%": "Espace superflue avant | dans un marqueur de mot (produit une double espace)",
+      "%markerSpaces_message_Unclosed%": "{marker} non fermé (aucun {close} correspondant)",
+      "%markerSpaces_message_Unexpected%": "{marker} inattendu ({base} n’est normalement pas fermé)"
+    }
+  }
+}

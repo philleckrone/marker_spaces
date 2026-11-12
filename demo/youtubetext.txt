@@ -1,0 +1,22 @@
+﻿Marker Spaces is a Paratext tool that finds spacing problems around character markers, footnotes and cross-references, for example a space before a closing marker, or a missing space before an opening one. It shows each problem with the text now and after the fix, and fixes the ones you tick, in the books you may edit. Before changing anything it adds a point to the project history and keeps a backup of each changed book.
+
+Download Install_Phils_tools.exe from the Paratext Plugins folder, and tick Marker Spaces in it:
+https://short.do/HgUb7T
+
+0:18 How do I open Marker Spaces?
+0:27 What does the list show?
+0:43 Which books are examined?
+0:58 How do I see one kind of problem?
+1:12 How can I see what a fix will change?
+1:28 How do I choose which problems to fix?
+1:38 Can I undo the fixes?
+1:52 Where do I see what was fixed?
+2:05 Why are some cross-references listed as problems?
+2:24 What is left after changing the options?
+2:33 How do I install the tool?
+
+Created with Claude AI.
+Narration: AI-generated voice (Microsoft Azure AI Speech, voice "Jenny").
+Music from Free To Use
+Source: https://freetouse.com/music
+Coconut Kind of Love by Aetheric

@@ -1,0 +1,75 @@
+{
+  "cues": "{1} before a phrase shows box 1 of the step from there on, {0,2} boxes 0 and 2, {} none; the pointer goes on the first box named. Cues are not spoken or shown. 'q' is the step's question in the YouTube timecodes (youtubetext.txt).",
+  "youtube": {
+    "en": {
+      "about": "Marker Spaces is a Paratext tool that finds spacing problems around character markers, footnotes and cross-references, for example a space before a closing marker, or a missing space before an opening one. It shows each problem with the text now and after the fix, and fixes the ones you tick, in the books you may edit. Before changing anything it adds a point to the project history and keeps a backup of each changed book.",
+      "download": "Download Install_Phils_tools.exe from the Paratext Plugins folder, and tick Marker Spaces in it:",
+      "link": "https://short.do/HgUb7T",
+      "credits": [
+        "Created with Claude AI.",
+        "Narration: AI-generated voice (Microsoft Azure AI Speech, voice \"Jenny\").",
+        "Music from Free To Use",
+        "Source: https://freetouse.com/music",
+        "Coconut Kind of Love by Aetheric"
+      ]
+    }
+  },
+  "steps": [
+    {
+      "id": "title",
+      "en": { "title": "Marker Spaces", "sub": "A Paratext tool: find and fix spacing problems around markers", "text": "Marker Spaces is a Paratext tool. It finds spacing problems around character markers, footnotes and cross-references, and fixes the ones you choose." }
+    },
+    {
+      "id": "s00_menu",
+      "en": { "title": "Open it from the Tools menu", "q": "How do I open Marker Spaces?", "text": "In Paratext, open the project. Then choose {0}Tools, then {1}Marker Spaces." }
+    },
+    {
+      "id": "s01_open",
+      "en": { "title": "The problems found", "q": "What does the list show?", "text": "Marker Spaces reads the project and lists every spacing problem it finds. {0}The text at the top explains how it works. {1}Each row is one problem, with its reference. {2}Below the list are the counts." }
+    },
+    {
+      "id": "s02_books",
+      "en": { "title": "Choose the books", "q": "Which books are examined?", "text": "{0}The Books button chooses the books to examine. {1}By default, the extra books, such as the glossary, are left out. {2}These buttons tick whole groups at once. The choice is saved for the project." }
+    },
+    {
+      "id": "s03_problem",
+      "en": { "title": "One kind of problem at a time", "q": "How do I see one kind of problem?", "text": "{0}The Problem list shows one kind of problem at a time. Here, a space before a closing marker, for example before the end of a footnote. {1}The counts follow the filter." }
+    },
+    {
+      "id": "s04_preview",
+      "en": { "title": "See each fix before you make it", "q": "How can I see what a fix will change?", "text": "{0}The Now column shows the text as it is. {1}The After fix column shows it once fixed. A small dot marks the space that is removed or added. Double-click a row to go to that verse in Paratext." }
+    },
+    {
+      "id": "s05_tick",
+      "en": { "title": "Tick the problems to fix", "q": "How do I choose which problems to fix?", "text": "{0}Tick all shown ticks every row in the list. {1}You can also tick rows one by one. {2}Then click Fix ticked problems." }
+    },
+    {
+      "id": "s06_confirm",
+      "en": { "title": "A history point and a backup", "q": "Can I undo the fixes?", "text": "{0}Before changing anything, Marker Spaces adds a point to the project history, and saves each changed book as a backup file in the project's local folder. {1}Click Yes." }
+    },
+    {
+      "id": "s07_results",
+      "en": { "title": "The results", "q": "Where do I see what was fixed?", "text": "{0}The results list what was fixed, book by book, and anything that could not be changed. Only chapters you have permission to edit are changed. {1}The list is scanned again." }
+    },
+    {
+      "id": "s08_options",
+      "en": { "title": "Options that fit your project", "q": "Why are some cross-references listed as problems?", "text": "Many of the other rows are a space after a cross-reference. That is only a problem when cross-references come before the word they belong to. In this project they come after it, so {0}untick Cross-references occur before word, {1}and click Save options and scan again." }
+    },
+    {
+      "id": "s09_left",
+      "en": { "title": "Only real problems are left", "q": "What is left after changing the options?", "text": "{0}Now only the real problems are left. {1}Check them, and fix the ones you want in the same way." }
+    },
+    {
+      "id": "sec_install",
+      "en": { "title": "Installing the tool", "q": "How do I install the tool?", "text": "Installing the tool." }
+    },
+    {
+      "id": "i5_ready",
+      "en": { "title": "Ready to use", "text": "Start Paratext again. {1,0}Marker Spaces is now on the Tools menu." }
+    },
+    {
+      "id": "end",
+      "en": { "title": "Marker Spaces", "sub": "Each fix shown before you make it  ·  A history point and a backup first  ·  Only the books you may edit", "text": "Marker Spaces shows each spacing problem with the text before and after the fix, and fixes the ones you tick. It adds a history point and keeps a backup first, and changes only the books you may edit." }
+    }
+  ]
+}
