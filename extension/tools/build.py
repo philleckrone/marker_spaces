@@ -6,7 +6,9 @@
 #
 # Extensions may only require papi modules (no relative files, no fs, no eval), so src/main.js is
 # one file: src/core.js, then the web view HTML, the built-in usfm.sty and the version as string
-# constants, then src/main.js. The result is syntax-checked with Paratext 10's own Node.
+# constants, then src/main.js. The result is syntax-checked with Paratext 10's own Node, then
+# linted with ESLint (tools/eslint at the repo root, also run with Paratext 10's Node); ESLint
+# errors stop the build. `--no-lint` skips ESLint.
 import json, os, shutil, subprocess, sys, zipfile
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -17,6 +19,8 @@ RELEASE = os.path.join(ROOT, 'release')
 USFM_STY = os.path.join(ROOT, '..', 'MarkerSpacesPlugin', 'Resources', 'usfm.sty')
 P10 = os.path.join(os.environ.get('LOCALAPPDATA', ''), 'Programs', 'paratext-10-studio', 'Paratext 10.exe')
 COPY = ['manifest.json', 'package.json', 'contributions', 'assets']
+sys.path.insert(0, os.path.join(ROOT, '..', '..', 'tools', 'eslint'))
+import eslint_runner  # noqa: E402
 
 
 def read(path):
@@ -42,15 +46,19 @@ def main():
         else:
             shutil.copy2(src, os.path.join(DIST, name))
 
-    main_js = '\n'.join([
-        '// Marker Spaces %s for Paratext 10. Built by tools/build.py from src/ - do not edit.' % version,
-        "'use strict';",
-        read(os.path.join(SRC, 'core.js')),
-        'const MS_VERSION = %s;' % js_string(version),
-        'const MS_WEB_VIEW_HTML = %s;' % js_string(read(os.path.join(SRC, 'marker-spaces.web-view.html'))),
-        'const MS_USFM_STY = %s;' % js_string(read(USFM_STY)),
-        read(os.path.join(SRC, 'main.js')),
-    ])
+    # (text, source path or None): the path lets ESLint report at the source line.
+    backend = eslint_runner.Unit('main.js', 'node', requires=['@papi/backend'])
+    for text, path in [
+        ('// Marker Spaces %s for Paratext 10. Built by tools/build.py from src/ - do not edit.' % version, None),
+        ("'use strict';", None),
+        (read(os.path.join(SRC, 'core.js')), os.path.join(SRC, 'core.js')),
+        ('const MS_VERSION = %s;' % js_string(version), None),
+        ('const MS_WEB_VIEW_HTML = %s;' % js_string(read(os.path.join(SRC, 'marker-spaces.web-view.html'))), None),
+        ('const MS_USFM_STY = %s;' % js_string(read(USFM_STY)), None),
+        (read(os.path.join(SRC, 'main.js')), os.path.join(SRC, 'main.js')),
+    ]:
+        backend.add(text, path)
+    main_js = backend.code()
     out = os.path.join(DIST, 'src', 'main.js')
     with open(out, 'w', encoding='utf-8', newline='\n') as f:
         f.write(main_js)
@@ -72,6 +80,12 @@ def main():
         if p.returncode != 0:
             sys.stderr.write(p.stderr.decode('utf-8', 'replace'))
             sys.exit('the web view script has a syntax error')
+        if '--no-lint' not in sys.argv:
+            window = eslint_runner.Unit('marker-spaces.web-view.html', 'browser', requires=['@papi/frontend'])
+            window.add(script, search=[os.path.join(SRC, 'marker-spaces.web-view.html')])
+            errors, _ = eslint_runner.lint([backend, window])
+            if errors:
+                sys.exit('ESLint found %d error(s); fix them or build with --no-lint' % errors)
     else:
         print('Paratext 10 not found: syntax not checked')
 
